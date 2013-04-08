@@ -5,6 +5,7 @@
 *.war
 *.ear
 
+.settings
 .classpath
 .metadata/
 .project
