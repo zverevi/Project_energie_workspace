@@ -57,3 +57,9 @@ Create or update tables:
 ```bash
 $ php app/console irise:createTable app/Resources/irise/1000080-2000900-3009906.txt
 ```
+
+**Usefull links and ressources**
+
+- [Éviter les fuites mémoire avec Propel](http://www.pmsipilot.org/2012/01/13/eviter-les-fuites-memoire-avec-propel/)
+- [Garbage Collector et consommation mémoire](http://blog.pascal-martin.fr/post/php-5.3-garbage-collector-vs-consommation-memoire)
+- [Databases and Propel](http://symfony.com/doc/current/book/propel.html)
