@@ -1,0 +1,4 @@
+m2miage_greenergy_project:
+    resource: "@m2miageGreenergyProjectBundle/Resources/config/routing.yml"
+    prefix:   /
+
