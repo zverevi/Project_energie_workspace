@@ -50,7 +50,7 @@ Propel doc: http://symfony.com/fr/doc/current/book/propel.html
 
 **Populate**
 
-Irise's files are in: `app/Resources/irise/1000080-2000900-3009906.txt`
+Irise's files are in: `app/Resources/irise/`
 
 Create or update tables:
 
