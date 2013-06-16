@@ -10,5 +10,22 @@ use JMS\Serializer\Annotation as Ser;
  */
 class Mesure {
 
+    /**
+     * @var \DateTime
+     * @Ser\Type("DateTime<'Y-m-d H:i:s', 'Europe/Paris'>")
+     */
+    protected $date;
+
+    /**
+     * @var integer
+     * @Ser\Type("integer")
+     */
+    protected $energy;
+
+    /**
+     * @var string
+     * @Ser\Type("integer")
+     */
+    protected $state;
 
 }
