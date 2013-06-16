@@ -19,13 +19,13 @@ use m2miageGre\energyProjectBundle\Model\MesureQuery;
 
 /**
  * @method MesureQuery orderById($order = Criteria::ASC) Order by the id column
- * @method MesureQuery orderByDate($order = Criteria::ASC) Order by the date column
+ * @method MesureQuery orderByTimestamp($order = Criteria::ASC) Order by the timestamp column
  * @method MesureQuery orderByState($order = Criteria::ASC) Order by the state column
  * @method MesureQuery orderByEnergy($order = Criteria::ASC) Order by the energy column
  * @method MesureQuery orderByCapteurId($order = Criteria::ASC) Order by the capteur_id column
  *
  * @method MesureQuery groupById() Group by the id column
- * @method MesureQuery groupByDate() Group by the date column
+ * @method MesureQuery groupByTimestamp() Group by the timestamp column
  * @method MesureQuery groupByState() Group by the state column
  * @method MesureQuery groupByEnergy() Group by the energy column
  * @method MesureQuery groupByCapteurId() Group by the capteur_id column
@@ -41,13 +41,13 @@ use m2miageGre\energyProjectBundle\Model\MesureQuery;
  * @method Mesure findOne(PropelPDO $con = null) Return the first Mesure matching the query
  * @method Mesure findOneOrCreate(PropelPDO $con = null) Return the first Mesure matching the query, or a new Mesure object populated from the query conditions when no match is found
  *
- * @method Mesure findOneByDate(string $date) Return the first Mesure filtered by the date column
+ * @method Mesure findOneByTimestamp(string $timestamp) Return the first Mesure filtered by the timestamp column
  * @method Mesure findOneByState(int $state) Return the first Mesure filtered by the state column
  * @method Mesure findOneByEnergy(int $energy) Return the first Mesure filtered by the energy column
  * @method Mesure findOneByCapteurId(int $capteur_id) Return the first Mesure filtered by the capteur_id column
  *
  * @method array findById(int $id) Return Mesure objects filtered by the id column
- * @method array findByDate(string $date) Return Mesure objects filtered by the date column
+ * @method array findByTimestamp(string $timestamp) Return Mesure objects filtered by the timestamp column
  * @method array findByState(int $state) Return Mesure objects filtered by the state column
  * @method array findByEnergy(int $energy) Return Mesure objects filtered by the energy column
  * @method array findByCapteurId(int $capteur_id) Return Mesure objects filtered by the capteur_id column
@@ -152,7 +152,7 @@ abstract class BaseMesureQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `date`, `state`, `energy`, `capteur_id` FROM `mesure` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `timestamp`, `state`, `energy`, `capteur_id` FROM `mesure` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -284,16 +284,16 @@ abstract class BaseMesureQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the date column
+     * Filter the query on the timestamp column
      *
      * Example usage:
      * <code>
-     * $query->filterByDate('2011-03-14'); // WHERE date = '2011-03-14'
-     * $query->filterByDate('now'); // WHERE date = '2011-03-14'
-     * $query->filterByDate(array('max' => 'yesterday')); // WHERE date > '2011-03-13'
+     * $query->filterByTimestamp('2011-03-14'); // WHERE timestamp = '2011-03-14'
+     * $query->filterByTimestamp('now'); // WHERE timestamp = '2011-03-14'
+     * $query->filterByTimestamp(array('max' => 'yesterday')); // WHERE timestamp > '2011-03-13'
      * </code>
      *
-     * @param     mixed $date The value to use as filter.
+     * @param     mixed $timestamp The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
@@ -303,16 +303,16 @@ abstract class BaseMesureQuery extends ModelCriteria
      *
      * @return MesureQuery The current query, for fluid interface
      */
-    public function filterByDate($date = null, $comparison = null)
+    public function filterByTimestamp($timestamp = null, $comparison = null)
     {
-        if (is_array($date)) {
+        if (is_array($timestamp)) {
             $useMinMax = false;
-            if (isset($date['min'])) {
-                $this->addUsingAlias(MesurePeer::DATE, $date['min'], Criteria::GREATER_EQUAL);
+            if (isset($timestamp['min'])) {
+                $this->addUsingAlias(MesurePeer::TIMESTAMP, $timestamp['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($date['max'])) {
-                $this->addUsingAlias(MesurePeer::DATE, $date['max'], Criteria::LESS_EQUAL);
+            if (isset($timestamp['max'])) {
+                $this->addUsingAlias(MesurePeer::TIMESTAMP, $timestamp['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -323,7 +323,7 @@ abstract class BaseMesureQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MesurePeer::DATE, $date, $comparison);
+        return $this->addUsingAlias(MesurePeer::TIMESTAMP, $timestamp, $comparison);
     }
 
     /**

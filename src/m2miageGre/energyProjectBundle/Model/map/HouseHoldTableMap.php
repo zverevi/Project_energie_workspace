@@ -40,7 +40,7 @@ class HouseHoldTableMap extends TableMap
         $this->setPhpName('HouseHold');
         $this->setClassname('m2miageGre\\energyProjectBundle\\Model\\HouseHold');
         $this->setPackage('src.m2miageGre.energyProjectBundle.Model');
-        $this->setUseIdGenerator(true);
+        $this->setUseIdGenerator(false);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         // validators

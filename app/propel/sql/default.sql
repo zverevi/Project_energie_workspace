@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS `household`;
 
 CREATE TABLE `household`
 (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS `mesure`;
 CREATE TABLE `mesure`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `date` DATE NOT NULL,
+    `timestamp` DATETIME NOT NULL,
     `state` INTEGER NOT NULL,
     `energy` INTEGER NOT NULL,
     `capteur_id` INTEGER NOT NULL,

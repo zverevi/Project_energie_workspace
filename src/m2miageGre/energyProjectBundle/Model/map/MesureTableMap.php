@@ -43,7 +43,7 @@ class MesureTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('date', 'Date', 'DATE', true, null, null);
+        $this->addColumn('timestamp', 'Timestamp', 'TIMESTAMP', true, null, null);
         $this->addColumn('state', 'State', 'INTEGER', true, null, null);
         $this->addColumn('energy', 'Energy', 'INTEGER', true, null, null);
         $this->addForeignKey('capteur_id', 'CapteurId', 'INTEGER', 'capteur', 'id', true, null, null);

@@ -2,7 +2,7 @@
 <database name="default" namespace="m2miageGre\energyProjectBundle\Model" defaultIdMethod="native">
 
   <table name ="household" phpName="HouseHold">
-  	<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+  	<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="false"/>
   </table>
 
   <table name ="capteur" phpName="Capteur">
@@ -16,7 +16,7 @@
 
   <table name ="mesure" phpName="Mesure">
 	<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-    <column name="date" type="date" required="true"/>
+    <column name="timestamp" type="timestamp" required="true"/>
     <column name="state" type="integer" required="true"/>
     <column name="energy" type="integer" required="true"/>
     <column name="capteur_id" type="integer" required="true"/>

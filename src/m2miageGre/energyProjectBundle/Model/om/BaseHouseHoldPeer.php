@@ -513,10 +513,6 @@ abstract class BaseHouseHoldPeer
             $criteria = $values->buildCriteria(); // build Criteria from HouseHold object
         }
 
-        if ($criteria->containsKey(HouseHoldPeer::ID) && $criteria->keyContainsValue(HouseHoldPeer::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.HouseHoldPeer::ID.')');
-        }
-
 
         // Set the correct dbName
         $criteria->setDbName(HouseHoldPeer::DATABASE_NAME);

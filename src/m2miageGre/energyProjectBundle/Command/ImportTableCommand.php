@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Propel;
 
 class ImportTableCommand extends ContainerAwareCommand {
 
@@ -27,6 +28,12 @@ class ImportTableCommand extends ContainerAwareCommand {
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // optimizations
+        gc_enable();
+        Propel::getConnection()->useDebug(false);
+        Propel::disableInstancePooling();
+        $output->writeln(memory_get_usage());
+
         $filePath = $input->getArgument('filePath');
         $output->writeln("Opening: ".$filePath);
         $handle = fopen($filePath, "r");
@@ -38,23 +45,29 @@ class ImportTableCommand extends ContainerAwareCommand {
         $houseHoldId = trim(explode(':', $header[1])[1]);
         $applianceId = trim(explode(':', $header[2])[1]);
 
-        $houseHold = new HouseHold($houseHoldId);
-        $capteur = new Capteur($applianceId);
+        $houseHold = new HouseHold();
+        $houseHold->setId($houseHoldId);
+        $capteur = new Capteur();
+        $capteur->setCapteurName($applianceId);
+        $houseHold->addCapteur($capteur);
+        $houseHold->save();
 
         while ($line = fgets($handle)) {
             $mesureArray = explode("\t", $line);
-            $date = date_create_from_format('j/m/y i:H', $mesureArray[0]." ".$mesureArray[1]);
+            $timestamp = date_create_from_format('j/m/y i:H', $mesureArray[0]." ".$mesureArray[1]);
             $state = $mesureArray[2];
             $energy = intval($mesureArray[3]);
             $mesure = new Mesure();
-            $mesure->setDate($date);
+            $mesure->setTimestamp($timestamp);
             $mesure->setEnergy($energy);
             $mesure->setState($state);
+            $mesure->setCapteurId($capteur->getId());
+
+            $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
             $mesure->save();
-
-            exit;
-//            $capteur->addMesures(new Mesure($date, $energy, $state));
-
+            gc_collect_cycles();
         }
+
+
     }
 }

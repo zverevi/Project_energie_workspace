@@ -47,10 +47,10 @@ abstract class BaseMesure extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the date field.
+     * The value for the timestamp field.
      * @var        string
      */
-    protected $date;
+    protected $timestamp;
 
     /**
      * The value for the state field.
@@ -106,30 +106,30 @@ abstract class BaseMesure extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [optionally formatted] temporal [date] column value.
+     * Get the [optionally formatted] temporal [timestamp] column value.
      *
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null, and 0 if column value is 0000-00-00 00:00:00
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDate($format = null)
+    public function getTimestamp($format = null)
     {
-        if ($this->date === null) {
+        if ($this->timestamp === null) {
             return null;
         }
 
-        if ($this->date === '0000-00-00') {
+        if ($this->timestamp === '0000-00-00 00:00:00') {
             // while technically this is not a default value of null,
             // this seems to be closest in meaning.
             return null;
         }
 
         try {
-            $dt = new DateTime($this->date);
+            $dt = new DateTime($this->timestamp);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->date, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->timestamp, true), $x);
         }
 
         if ($format === null) {
@@ -197,27 +197,27 @@ abstract class BaseMesure extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Sets the value of [date] column to a normalized version of the date/time value specified.
+     * Sets the value of [timestamp] column to a normalized version of the date/time value specified.
      *
      * @param mixed $v string, integer (timestamp), or DateTime value.
      *               Empty strings are treated as null.
      * @return Mesure The current object (for fluent API support)
      */
-    public function setDate($v)
+    public function setTimestamp($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->date !== null || $dt !== null) {
-            $currentDateAsString = ($this->date !== null && $tmpDt = new DateTime($this->date)) ? $tmpDt->format('Y-m-d') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
+        if ($this->timestamp !== null || $dt !== null) {
+            $currentDateAsString = ($this->timestamp !== null && $tmpDt = new DateTime($this->timestamp)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
-                $this->date = $newDateAsString;
-                $this->modifiedColumns[] = MesurePeer::DATE;
+                $this->timestamp = $newDateAsString;
+                $this->modifiedColumns[] = MesurePeer::TIMESTAMP;
             }
         } // if either are not null
 
 
         return $this;
-    } // setDate()
+    } // setTimestamp()
 
     /**
      * Set the value of [state] column.
@@ -319,7 +319,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->date = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->timestamp = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->state = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->energy = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->capteur_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
@@ -562,8 +562,8 @@ abstract class BaseMesure extends BaseObject implements Persistent
         if ($this->isColumnModified(MesurePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '`id`';
         }
-        if ($this->isColumnModified(MesurePeer::DATE)) {
-            $modifiedColumns[':p' . $index++]  = '`date`';
+        if ($this->isColumnModified(MesurePeer::TIMESTAMP)) {
+            $modifiedColumns[':p' . $index++]  = '`timestamp`';
         }
         if ($this->isColumnModified(MesurePeer::STATE)) {
             $modifiedColumns[':p' . $index++]  = '`state`';
@@ -588,8 +588,8 @@ abstract class BaseMesure extends BaseObject implements Persistent
                     case '`id`':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '`date`':
-                        $stmt->bindValue($identifier, $this->date, PDO::PARAM_STR);
+                    case '`timestamp`':
+                        $stmt->bindValue($identifier, $this->timestamp, PDO::PARAM_STR);
                         break;
                     case '`state`':
                         $stmt->bindValue($identifier, $this->state, PDO::PARAM_INT);
@@ -750,7 +750,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getDate();
+                return $this->getTimestamp();
                 break;
             case 2:
                 return $this->getState();
@@ -791,7 +791,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
         $keys = MesurePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getDate(),
+            $keys[1] => $this->getTimestamp(),
             $keys[2] => $this->getState(),
             $keys[3] => $this->getEnergy(),
             $keys[4] => $this->getCapteurId(),
@@ -838,7 +838,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setDate($value);
+                $this->setTimestamp($value);
                 break;
             case 2:
                 $this->setState($value);
@@ -874,7 +874,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
         $keys = MesurePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setDate($arr[$keys[1]]);
+        if (array_key_exists($keys[1], $arr)) $this->setTimestamp($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setState($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setEnergy($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setCapteurId($arr[$keys[4]]);
@@ -890,7 +890,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
         $criteria = new Criteria(MesurePeer::DATABASE_NAME);
 
         if ($this->isColumnModified(MesurePeer::ID)) $criteria->add(MesurePeer::ID, $this->id);
-        if ($this->isColumnModified(MesurePeer::DATE)) $criteria->add(MesurePeer::DATE, $this->date);
+        if ($this->isColumnModified(MesurePeer::TIMESTAMP)) $criteria->add(MesurePeer::TIMESTAMP, $this->timestamp);
         if ($this->isColumnModified(MesurePeer::STATE)) $criteria->add(MesurePeer::STATE, $this->state);
         if ($this->isColumnModified(MesurePeer::ENERGY)) $criteria->add(MesurePeer::ENERGY, $this->energy);
         if ($this->isColumnModified(MesurePeer::CAPTEUR_ID)) $criteria->add(MesurePeer::CAPTEUR_ID, $this->capteur_id);
@@ -957,7 +957,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setDate($this->getDate());
+        $copyObj->setTimestamp($this->getTimestamp());
         $copyObj->setState($this->getState());
         $copyObj->setEnergy($this->getEnergy());
         $copyObj->setCapteurId($this->getCapteurId());
@@ -1077,7 +1077,7 @@ abstract class BaseMesure extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->date = null;
+        $this->timestamp = null;
         $this->state = null;
         $this->energy = null;
         $this->capteur_id = null;

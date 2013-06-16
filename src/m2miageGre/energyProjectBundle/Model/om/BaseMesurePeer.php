@@ -41,8 +41,8 @@ abstract class BaseMesurePeer
     /** the column name for the id field */
     const ID = 'mesure.id';
 
-    /** the column name for the date field */
-    const DATE = 'mesure.date';
+    /** the column name for the timestamp field */
+    const TIMESTAMP = 'mesure.timestamp';
 
     /** the column name for the state field */
     const STATE = 'mesure.state';
@@ -72,11 +72,11 @@ abstract class BaseMesurePeer
      * e.g. MesurePeer::$fieldNames[MesurePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Date', 'State', 'Energy', 'CapteurId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'date', 'state', 'energy', 'capteurId', ),
-        BasePeer::TYPE_COLNAME => array (MesurePeer::ID, MesurePeer::DATE, MesurePeer::STATE, MesurePeer::ENERGY, MesurePeer::CAPTEUR_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'DATE', 'STATE', 'ENERGY', 'CAPTEUR_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'date', 'state', 'energy', 'capteur_id', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Timestamp', 'State', 'Energy', 'CapteurId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'timestamp', 'state', 'energy', 'capteurId', ),
+        BasePeer::TYPE_COLNAME => array (MesurePeer::ID, MesurePeer::TIMESTAMP, MesurePeer::STATE, MesurePeer::ENERGY, MesurePeer::CAPTEUR_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TIMESTAMP', 'STATE', 'ENERGY', 'CAPTEUR_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'timestamp', 'state', 'energy', 'capteur_id', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
@@ -87,11 +87,11 @@ abstract class BaseMesurePeer
      * e.g. MesurePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Date' => 1, 'State' => 2, 'Energy' => 3, 'CapteurId' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'date' => 1, 'state' => 2, 'energy' => 3, 'capteurId' => 4, ),
-        BasePeer::TYPE_COLNAME => array (MesurePeer::ID => 0, MesurePeer::DATE => 1, MesurePeer::STATE => 2, MesurePeer::ENERGY => 3, MesurePeer::CAPTEUR_ID => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'DATE' => 1, 'STATE' => 2, 'ENERGY' => 3, 'CAPTEUR_ID' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'date' => 1, 'state' => 2, 'energy' => 3, 'capteur_id' => 4, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Timestamp' => 1, 'State' => 2, 'Energy' => 3, 'CapteurId' => 4, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'timestamp' => 1, 'state' => 2, 'energy' => 3, 'capteurId' => 4, ),
+        BasePeer::TYPE_COLNAME => array (MesurePeer::ID => 0, MesurePeer::TIMESTAMP => 1, MesurePeer::STATE => 2, MesurePeer::ENERGY => 3, MesurePeer::CAPTEUR_ID => 4, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TIMESTAMP' => 1, 'STATE' => 2, 'ENERGY' => 3, 'CAPTEUR_ID' => 4, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'timestamp' => 1, 'state' => 2, 'energy' => 3, 'capteur_id' => 4, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
@@ -167,13 +167,13 @@ abstract class BaseMesurePeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(MesurePeer::ID);
-            $criteria->addSelectColumn(MesurePeer::DATE);
+            $criteria->addSelectColumn(MesurePeer::TIMESTAMP);
             $criteria->addSelectColumn(MesurePeer::STATE);
             $criteria->addSelectColumn(MesurePeer::ENERGY);
             $criteria->addSelectColumn(MesurePeer::CAPTEUR_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.date');
+            $criteria->addSelectColumn($alias . '.timestamp');
             $criteria->addSelectColumn($alias . '.state');
             $criteria->addSelectColumn($alias . '.energy');
             $criteria->addSelectColumn($alias . '.capteur_id');
