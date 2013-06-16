@@ -7,6 +7,7 @@ use m2miageGre\energyProjectBundle\Model\Capteur;
 use m2miageGre\energyProjectBundle\Model\HouseHold;
 use m2miageGre\energyProjectBundle\Model\Mesure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,14 +21,19 @@ class ImportTableCommand extends ContainerAwareCommand {
             ->setName("irise:createTable")
             ->setDescription("Extract Data from Irise file and populate DataBase")
             ->addArgument(
+                "filePath",
+                InputArgument::REQUIRED,
+                "File path of Irise datafile"
+            )
+            ->addArgument(
                 "version",
                 InputArgument::REQUIRED,
                 "Algorithm version: v1 v2 v3 or v4"
             )
             ->addArgument(
-                "filePath",
-                InputArgument::REQUIRED,
-                "File path of Irise datafile"
+                "thresold",
+                InputArgument::OPTIONAL,
+                "thresold for v4"
             );
     }
 
@@ -38,18 +44,19 @@ class ImportTableCommand extends ContainerAwareCommand {
         Propel::getConnection()->useDebug(false);
         Propel::disableInstancePooling();
         $output->writeln(memory_get_usage());
-
+        // file handle
         $filePath = $input->getArgument('filePath');
         $output->writeln("Opening: ".$filePath);
         $handle = fopen($filePath, "r");
 
+        //extract info from 5 first lines
         for ($i=0;$i<5;$i++) {
             $header[] =  fgets($handle);
         }
 
         $houseHoldId = trim(explode(':', $header[1])[1]);
         $applianceId = trim(explode(':', $header[2])[1]);
-
+        // create entities
         $houseHold = new HouseHold();
         $houseHold->setId($houseHoldId);
         if ($houseHold->validate()) {
@@ -71,92 +78,53 @@ class ImportTableCommand extends ContainerAwareCommand {
             }
         }
 
-
+        $this->thresold = $input->getArgument("thresold");
         while ($line = fgets($handle)) {
-            switch ($input->getArgument("version")) {
-                case "v1" :
-                    $this->v1($input, $output, $line, $capteur);
-                    break;
-                case "v2" :
-                    $this->v2($input, $output, $line, $capteur);
-                    break;
-                case "v3" :
-                    $this->v3($input, $output, $line, $capteur);
-                    break;
-                case "v4" :
-                    $this->v4($input, $output, $line, $capteur);
-                    break;
-                default:
-                    $output->writeln("This version don't exists");
+
+            $mesureArray = explode("\t", $line);
+            $timestamp = date_create_from_format('j/m/y H:i', $mesureArray[0]." ".$mesureArray[1]);
+            $state = $mesureArray[2];
+            $energy = intval($mesureArray[3]);
+            if ($this->testCreateMesure($input->getArgument("version"), $energy)) {
+                $mesure = new Mesure();
+                $mesure->setTimestamp($timestamp);
+                $mesure->setEnergy($energy);
+                $mesure->setState($state);
+                $mesure->setCapteurId($capteur->getId());
+                $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
+                $mesure->save();
+
+                $this->lastEnergyValue = $energy;
+                gc_collect_cycles();
             }
+
+
+        }
+    }
+
+    public function testCreateMesure($version, $energy) {
+
+        switch ($version) {
+            case "v1" :
+                return true;
+            case "v2" :
+                return $energy != 0;
+            case "v3" :
+                return $energy !== $this->lastEnergyValue;
+            case "v4" :
+                return abs($energy - $this->lastEnergyValue) > $this->thresold;
+            default:
+                throw new \Exception("version does not exist");
         }
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param String $line
-     * @param Capteur $capteur
+     * @var integer
      */
-    protected function v1(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
-    {
-        $mesureArray = explode("\t", $line);
-        $timestamp = date_create_from_format('j/m/y H:i', $mesureArray[0]." ".$mesureArray[1]);
-        $state = $mesureArray[2];
-        $energy = intval($mesureArray[3]);
-        $mesure = new Mesure();
-        $mesure->setTimestamp($timestamp);
-        $mesure->setEnergy($energy);
-        $mesure->setState($state);
-        $mesure->setCapteurId($capteur->getId());
-
-        $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
-        $mesure->save();
-        gc_collect_cycles();
-    }
-
-    protected function v2(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
-    {
-        $mesureArray = explode("\t", $line);
-        $timestamp = date_create_from_format('j/m/y H:i', $mesureArray[0]." ".$mesureArray[1]);
-        $state = $mesureArray[2];
-        $energy = intval($mesureArray[3]);
-        if ($energy != 0) {
-            $mesure = new Mesure();
-            $mesure->setTimestamp($timestamp);
-            $mesure->setEnergy($energy);
-            $mesure->setState($state);
-            $mesure->setCapteurId($capteur->getId());
-            $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
-            $mesure->save();
-            gc_collect_cycles();
-        }
-    }
-
-    protected function v3(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
-    {
-        $mesureArray = explode("\t", $line);
-        $timestamp = date_create_from_format('j/m/y H:i', $mesureArray[0]." ".$mesureArray[1]);
-        $state = $mesureArray[2];
-        $energy = intval($mesureArray[3]);
-        if ($energy !== $this->lastEnergyValue) {
-            $mesure = new Mesure();
-            $mesure->setTimestamp($timestamp);
-            $mesure->setEnergy($energy);
-            $mesure->setState($state);
-            $mesure->setCapteurId($capteur->getId());
-            $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
-            $mesure->save();
-
-            $this->lastEnergyValue = $energy;
-            gc_collect_cycles();
-        }
-    }
-
-    protected function v4(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
-    {
-        $output->writeln("not yet implemented");
-    }
-
     protected $lastEnergyValue;
+
+    /**
+     * @var integer
+     */
+    protected $thresold;
 }
