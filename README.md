@@ -55,8 +55,32 @@ Irise's files are in: `app/Resources/irise/`
 Create or update tables:
 
 ```bash
-$ php app/console irise:createTable app/Resources/irise/1000080-2000900-3009906.txt
+    $ php app/console irise:createTable filename v1|v2|v3|v4 [threshold]
+
+    $ php app/console irise:createTable app/Resources/irise/1000080-2000900-3009906.txt v1
+    $ php app/console irise:createTable app/Resources/irise/1000080-2000900-3009906.txt v4 3
 ```
+
+**apache**
+
+```bash
+    #activate rewrite module
+    $ sudo a2enmod rewrite
+    # copy apache conf
+    $ cp app/Resources/apache/iriseProject.conf /etc/apache2/site-available
+    #activate virtual host
+    $ sudo a2ensite iriseProject.conf
+    #restart apache
+    $ sudo service apache2 restart
+```
+
+Default port is *11000*
+**API**
+
+path: `/{version}/{year}/{v4Threshold}/{household}.json`
+
+Example:
+    `http://127.0.0.1:11000/app_dev.php/v4/1999/0/2000903.json`
 
 **Usefull links and ressources**
 
