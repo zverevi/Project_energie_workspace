@@ -1,16 +1,16 @@
 Energy Project M2Miage Grenoble
 ------
 
-**Install dependencies**
+**Dependencies with Composer**
 
-Step 1: Get Composer
+Install Composer
 
 ```bash
 $ curl -sS https://getcomposer.org/installer | php
 $ mv composer.phar /usr/local/bin/composer
 ```
 
-Step 2: Install vendors
+Install vendors
 
 ```bash
 $ composer install
