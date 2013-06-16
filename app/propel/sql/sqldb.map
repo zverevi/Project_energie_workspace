@@ -1,0 +1,3 @@
+# Sqlfile -> Database map
+default.sql=default
+irise.sql=irise

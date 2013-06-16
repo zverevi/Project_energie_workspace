@@ -46,7 +46,15 @@ class ImportTableCommand extends ContainerAwareCommand {
             $date = date_create_from_format('j/m/y i:H', $mesureArray[0]." ".$mesureArray[1]);
             $state = $mesureArray[2];
             $energy = intval($mesureArray[3]);
-            $capteur->addMesures(new Mesure($date, $energy, $state));
+            $mesure = new Mesure();
+            $mesure->setDate($date);
+            $mesure->setEnergy($energy);
+            $mesure->setState($state);
+            $mesure->save();
+
+            exit;
+//            $capteur->addMesures(new Mesure($date, $energy, $state));
+
         }
     }
 }
