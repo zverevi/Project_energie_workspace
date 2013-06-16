@@ -27,3 +27,5 @@ Create database and tables using propel command
 ```
 
 Database schema is in `m2miageGre\energyProjectBundle\Resources/config`
+
+Propel doc: http://symfony.com/fr/doc/current/book/propel.html
