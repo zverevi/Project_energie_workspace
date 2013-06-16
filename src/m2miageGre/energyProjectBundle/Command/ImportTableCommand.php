@@ -20,6 +20,11 @@ class ImportTableCommand extends ContainerAwareCommand {
             ->setName("irise:createTable")
             ->setDescription("Extract Data from Irise file and populate DataBase")
             ->addArgument(
+                "version",
+                InputArgument::REQUIRED,
+                "Algorithm version: v1 v2 v3 or v4"
+            )
+            ->addArgument(
                 "filePath",
                 InputArgument::REQUIRED,
                 "File path of Irise datafile"
@@ -47,27 +52,81 @@ class ImportTableCommand extends ContainerAwareCommand {
 
         $houseHold = new HouseHold();
         $houseHold->setId($houseHoldId);
+        if ($houseHold->validate()) {
+            $houseHold->save();
+        } else {
+            foreach ($houseHold->getValidationFailures() as $failure) {
+                echo $failure->getMessage() . "\n";
+            }
+        }
         $capteur = new Capteur();
         $capteur->setCapteurName($applianceId);
-        $houseHold->addCapteur($capteur);
-        $houseHold->save();
-
-        while ($line = fgets($handle)) {
-            $mesureArray = explode("\t", $line);
-            $timestamp = date_create_from_format('j/m/y i:H', $mesureArray[0]." ".$mesureArray[1]);
-            $state = $mesureArray[2];
-            $energy = intval($mesureArray[3]);
-            $mesure = new Mesure();
-            $mesure->setTimestamp($timestamp);
-            $mesure->setEnergy($energy);
-            $mesure->setState($state);
-            $mesure->setCapteurId($capteur->getId());
-
-            $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
-            $mesure->save();
-            gc_collect_cycles();
+        $capteur->setHouseholdId($houseHold->getId());
+        if ($capteur->validate()) {
+            $capteur->save();
+        } else {
+                foreach ($houseHold->getValidationFailures() as $failure) {
+                    echo $failure->getMessage() . "\n";
+                    exit;
+                }
         }
 
 
+        while ($line = fgets($handle)) {
+            switch ($input->getArgument("version")) {
+                case "v1" :
+                    $this->v1($input, $output, $line, $capteur);
+                    break;
+                case "v2" :
+                    $this->v2($input, $output, $line, $capteur);
+                    break;
+                case "v3" :
+                    $this->v3($input, $output, $line, $capteur);
+                    break;
+                case "v4" :
+                    $this->v4($input, $output, $line, $capteur);
+                    break;
+                default:
+                    $output->writeln("This version don't exists");
+            }
+        }
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param String $line
+     * @param Capteur $capteur
+     */
+    protected function v1(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
+    {
+        $mesureArray = explode("\t", $line);
+        $timestamp = date_create_from_format('j/m/y i:H', $mesureArray[0]." ".$mesureArray[1]);
+        $state = $mesureArray[2];
+        $energy = intval($mesureArray[3]);
+        $mesure = new Mesure();
+        $mesure->setTimestamp($timestamp);
+        $mesure->setEnergy($energy);
+        $mesure->setState($state);
+        $mesure->setCapteurId($capteur->getId());
+
+        $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
+        $mesure->save();
+        gc_collect_cycles();
+    }
+
+    protected function v2(InputInterface $input, OutputInterface $output, $line)
+    {
+
+    }
+
+    protected function v3(InputInterface $input, OutputInterface $output, $line)
+    {
+
+    }
+
+    protected function v4(InputInterface $input, OutputInterface $output, $line)
+    {
+        $output->writeln("not yet implemented");
     }
 }

@@ -44,6 +44,7 @@ class HouseHoldTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         // validators
+        $this->addValidator('id', 'unique', 'propel.validator.UniqueValidator', '', 'Household already exists !');
     } // initialize()
 
     /**

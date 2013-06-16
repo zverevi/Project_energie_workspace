@@ -48,6 +48,7 @@ class MesureTableMap extends TableMap
         $this->addColumn('energy', 'Energy', 'INTEGER', true, null, null);
         $this->addForeignKey('capteur_id', 'CapteurId', 'INTEGER', 'capteur', 'id', true, null, null);
         // validators
+        $this->addValidator('id', 'unique', 'propel.validator.UniqueValidator', '', 'Mesure already exists !');
     } // initialize()
 
     /**

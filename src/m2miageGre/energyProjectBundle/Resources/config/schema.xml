@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="default" namespace="m2miageGre\energyProjectBundle\Model" defaultIdMethod="native">
 
-  <table name ="household" phpName="HouseHold">
-  	<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="false"/>
-  </table>
+    <table name ="household" phpName="HouseHold">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="false"/>
+        <validator column="id">
+            <rule
+                    name="unique"
+                    message="Household already exists !" />
+        </validator>
+    </table>
 
-  <table name ="capteur" phpName="Capteur">
-	<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-    <column name="capteur_name" type="varchar" size="128" required="true"/>
-    <column name="household_id" type="integer" required="true"/>
-    <foreign-key foreignTable="household" phpName="HouseHold" refPhpName="Capteur">
-      <reference local="household_id" foreign="id"/>
-    </foreign-key>
-  </table>
+    <table name ="capteur" phpName="Capteur">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="capteur_name" type="varchar" size="128" required="true"/>
+        <column name="household_id" type="integer" required="true"/>
+        <foreign-key foreignTable="household" phpName="HouseHold" refPhpName="Capteur">
+            <reference local="household_id" foreign="id"/>
+        </foreign-key>
+        <validator column="id">
+            <rule
+                    name="unique"
+                    message="Capteur already exists !" />
+        </validator>
+    </table>
 
-  <table name ="mesure" phpName="Mesure">
-	<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-    <column name="timestamp" type="timestamp" required="true"/>
-    <column name="state" type="integer" required="true"/>
-    <column name="energy" type="integer" required="true"/>
-    <column name="capteur_id" type="integer" required="true"/>
-    <foreign-key foreignTable="capteur" phpName="Capteur" refPhpName="Mesure">
-      <reference local="capteur_id" foreign="id"/>
-    </foreign-key>
-  </table>
+    <table name ="mesure" phpName="Mesure">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="timestamp" type="timestamp" required="true"/>
+        <column name="state" type="integer" required="true"/>
+        <column name="energy" type="integer" required="true"/>
+        <column name="capteur_id" type="integer" required="true"/>
+        <foreign-key foreignTable="capteur" phpName="Capteur" refPhpName="Mesure">
+            <reference local="capteur_id" foreign="id"/>
+        </foreign-key>
+        <validator column="id">
+            <rule
+                    name="unique"
+                    message="Mesure already exists !" />
+        </validator>
+    </table>
 
 </database>

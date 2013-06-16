@@ -693,6 +693,9 @@ abstract class BaseHouseHoldPeer
             }
         } else {
 
+        if ($obj->isNew() || $obj->isColumnModified(HouseHoldPeer::ID))
+            $columns[HouseHoldPeer::ID] = $obj->getId();
+
         }
 
         return BasePeer::doValidate(HouseHoldPeer::DATABASE_NAME, HouseHoldPeer::TABLE_NAME, $columns);
