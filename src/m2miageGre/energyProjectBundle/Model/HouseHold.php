@@ -25,6 +25,11 @@ class HouseHold {
      */
     protected $capteurs;
 
+    function __construct($household)
+    {
+        $this->household = $household;
+    }
+
     /**
      * @param $capteur Capteur
      */

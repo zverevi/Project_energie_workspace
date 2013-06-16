@@ -28,4 +28,12 @@ class Mesure {
      */
     protected $state;
 
+    function __construct($date, $energy, $state)
+    {
+        $this->date = $date;
+        $this->energy = $energy;
+        $this->state = $state;
+    }
+
+
 }

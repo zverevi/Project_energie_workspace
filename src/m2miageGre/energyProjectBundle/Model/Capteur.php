@@ -25,6 +25,11 @@ class Capteur {
      */
     protected $mesures;
 
+    function __construct($appliance)
+    {
+        $this->appliance = $appliance;
+    }
+
     /**
      * @param $mesure Mesure
      */
