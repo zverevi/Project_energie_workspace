@@ -65,10 +65,10 @@ class ImportTableCommand extends ContainerAwareCommand {
         if ($capteur->validate()) {
             $capteur->save();
         } else {
-                foreach ($houseHold->getValidationFailures() as $failure) {
-                    echo $failure->getMessage() . "\n";
-                    exit;
-                }
+            foreach ($houseHold->getValidationFailures() as $failure) {
+                echo $failure->getMessage() . "\n";
+                exit;
+            }
         }
 
 
@@ -101,7 +101,7 @@ class ImportTableCommand extends ContainerAwareCommand {
     protected function v1(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
     {
         $mesureArray = explode("\t", $line);
-        $timestamp = date_create_from_format('j/m/y i:H', $mesureArray[0]." ".$mesureArray[1]);
+        $timestamp = date_create_from_format('j/m/y H:i', $mesureArray[0]." ".$mesureArray[1]);
         $state = $mesureArray[2];
         $energy = intval($mesureArray[3]);
         $mesure = new Mesure();
@@ -115,18 +115,48 @@ class ImportTableCommand extends ContainerAwareCommand {
         gc_collect_cycles();
     }
 
-    protected function v2(InputInterface $input, OutputInterface $output, $line)
+    protected function v2(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
     {
-
+        $mesureArray = explode("\t", $line);
+        $timestamp = date_create_from_format('j/m/y H:i', $mesureArray[0]." ".$mesureArray[1]);
+        $state = $mesureArray[2];
+        $energy = intval($mesureArray[3]);
+        if ($energy != 0) {
+            $mesure = new Mesure();
+            $mesure->setTimestamp($timestamp);
+            $mesure->setEnergy($energy);
+            $mesure->setState($state);
+            $mesure->setCapteurId($capteur->getId());
+            $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
+            $mesure->save();
+            gc_collect_cycles();
+        }
     }
 
-    protected function v3(InputInterface $input, OutputInterface $output, $line)
+    protected function v3(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
     {
+        $mesureArray = explode("\t", $line);
+        $timestamp = date_create_from_format('j/m/y H:i', $mesureArray[0]." ".$mesureArray[1]);
+        $state = $mesureArray[2];
+        $energy = intval($mesureArray[3]);
+        if ($energy !== $this->lastEnergyValue) {
+            $mesure = new Mesure();
+            $mesure->setTimestamp($timestamp);
+            $mesure->setEnergy($energy);
+            $mesure->setState($state);
+            $mesure->setCapteurId($capteur->getId());
+            $output->writeln("saving ".$mesure->getTimestamp("Y-m-d H:i"));
+            $mesure->save();
 
+            $this->lastEnergyValue = $energy;
+            gc_collect_cycles();
+        }
     }
 
-    protected function v4(InputInterface $input, OutputInterface $output, $line)
+    protected function v4(InputInterface $input, OutputInterface $output, $line, Capteur $capteur)
     {
         $output->writeln("not yet implemented");
     }
+
+    protected $lastEnergyValue;
 }
