@@ -1,12 +1,14 @@
-*.class
+# Bootstrap
+app/bootstrap*
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# Symfony directories
+vendor/*
+*/logs/*
+*/cache/*
+web/uploads/*
+web/bundles/*
 
-.settings
-.classpath
-.metadata/
-.project
+# Configuration files
+app/config/parameters.ini
+app/config/parameters.yml
 
