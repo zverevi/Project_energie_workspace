@@ -69,6 +69,7 @@ class ImportTableCommand extends ContainerAwareCommand {
         $capteur = new Capteur();
         $capteur->setCapteurName($applianceId);
         $capteur->setHouseholdId($houseHold->getId());
+        $capteur->setVersion($input->getArgument("version"));
         if ($capteur->validate()) {
             $capteur->save();
         } else {

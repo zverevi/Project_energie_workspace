@@ -55,6 +55,12 @@ abstract class BaseCapteur extends BaseObject implements Persistent
     protected $capteur_name;
 
     /**
+     * The value for the version field.
+     * @var        string
+     */
+    protected $version;
+
+    /**
      * The value for the household_id field.
      * @var        int
      */
@@ -118,6 +124,16 @@ abstract class BaseCapteur extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [version] column value.
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
      * Get the [household_id] column value.
      *
      * @return int
@@ -168,6 +184,27 @@ abstract class BaseCapteur extends BaseObject implements Persistent
 
         return $this;
     } // setCapteurName()
+
+    /**
+     * Set the value of [version] column.
+     *
+     * @param string $v new value
+     * @return Capteur The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[] = CapteurPeer::VERSION;
+        }
+
+
+        return $this;
+    } // setVersion()
 
     /**
      * Set the value of [household_id] column.
@@ -228,7 +265,8 @@ abstract class BaseCapteur extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->capteur_name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->household_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->version = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->household_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -237,7 +275,7 @@ abstract class BaseCapteur extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 3; // 3 = CapteurPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = CapteurPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Capteur object", $e);
@@ -490,6 +528,9 @@ abstract class BaseCapteur extends BaseObject implements Persistent
         if ($this->isColumnModified(CapteurPeer::CAPTEUR_NAME)) {
             $modifiedColumns[':p' . $index++]  = '`capteur_name`';
         }
+        if ($this->isColumnModified(CapteurPeer::VERSION)) {
+            $modifiedColumns[':p' . $index++]  = '`version`';
+        }
         if ($this->isColumnModified(CapteurPeer::HOUSEHOLD_ID)) {
             $modifiedColumns[':p' . $index++]  = '`household_id`';
         }
@@ -509,6 +550,9 @@ abstract class BaseCapteur extends BaseObject implements Persistent
                         break;
                     case '`capteur_name`':
                         $stmt->bindValue($identifier, $this->capteur_name, PDO::PARAM_STR);
+                        break;
+                    case '`version`':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_STR);
                         break;
                     case '`household_id`':
                         $stmt->bindValue($identifier, $this->household_id, PDO::PARAM_INT);
@@ -674,6 +718,9 @@ abstract class BaseCapteur extends BaseObject implements Persistent
                 return $this->getCapteurName();
                 break;
             case 2:
+                return $this->getVersion();
+                break;
+            case 3:
                 return $this->getHouseholdId();
                 break;
             default:
@@ -707,7 +754,8 @@ abstract class BaseCapteur extends BaseObject implements Persistent
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getCapteurName(),
-            $keys[2] => $this->getHouseholdId(),
+            $keys[2] => $this->getVersion(),
+            $keys[3] => $this->getHouseholdId(),
         );
         if ($includeForeignObjects) {
             if (null !== $this->aHouseHold) {
@@ -757,6 +805,9 @@ abstract class BaseCapteur extends BaseObject implements Persistent
                 $this->setCapteurName($value);
                 break;
             case 2:
+                $this->setVersion($value);
+                break;
+            case 3:
                 $this->setHouseholdId($value);
                 break;
         } // switch()
@@ -785,7 +836,8 @@ abstract class BaseCapteur extends BaseObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setCapteurName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setHouseholdId($arr[$keys[2]]);
+        if (array_key_exists($keys[2], $arr)) $this->setVersion($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setHouseholdId($arr[$keys[3]]);
     }
 
     /**
@@ -799,6 +851,7 @@ abstract class BaseCapteur extends BaseObject implements Persistent
 
         if ($this->isColumnModified(CapteurPeer::ID)) $criteria->add(CapteurPeer::ID, $this->id);
         if ($this->isColumnModified(CapteurPeer::CAPTEUR_NAME)) $criteria->add(CapteurPeer::CAPTEUR_NAME, $this->capteur_name);
+        if ($this->isColumnModified(CapteurPeer::VERSION)) $criteria->add(CapteurPeer::VERSION, $this->version);
         if ($this->isColumnModified(CapteurPeer::HOUSEHOLD_ID)) $criteria->add(CapteurPeer::HOUSEHOLD_ID, $this->household_id);
 
         return $criteria;
@@ -864,6 +917,7 @@ abstract class BaseCapteur extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setCapteurName($this->getCapteurName());
+        $copyObj->setVersion($this->getVersion());
         $copyObj->setHouseholdId($this->getHouseholdId());
 
         if ($deepCopy && !$this->startCopy) {
@@ -1222,6 +1276,7 @@ abstract class BaseCapteur extends BaseObject implements Persistent
     {
         $this->id = null;
         $this->capteur_name = null;
+        $this->version = null;
         $this->household_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;

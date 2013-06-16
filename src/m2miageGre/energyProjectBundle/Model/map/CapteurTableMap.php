@@ -44,6 +44,7 @@ class CapteurTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('capteur_name', 'CapteurName', 'VARCHAR', true, 128, null);
+        $this->addColumn('version', 'Version', 'VARCHAR', true, 255, null);
         $this->addForeignKey('household_id', 'HouseholdId', 'INTEGER', 'household', 'id', true, null, null);
         // validators
         $this->addValidator('id', 'unique', 'propel.validator.UniqueValidator', '', 'Capteur already exists !');

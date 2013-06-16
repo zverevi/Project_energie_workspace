@@ -25,6 +25,7 @@ CREATE TABLE `capteur`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `capteur_name` VARCHAR(128) NOT NULL,
+    `version` VARCHAR(255) NOT NULL,
     `household_id` INTEGER NOT NULL,
     PRIMARY KEY (`id`),
     INDEX `capteur_FI_1` (`household_id`)

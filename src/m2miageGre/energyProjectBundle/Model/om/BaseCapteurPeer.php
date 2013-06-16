@@ -30,19 +30,22 @@ abstract class BaseCapteurPeer
     const TM_CLASS = 'CapteurTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
     const ID = 'capteur.id';
 
     /** the column name for the capteur_name field */
     const CAPTEUR_NAME = 'capteur.capteur_name';
+
+    /** the column name for the version field */
+    const VERSION = 'capteur.version';
 
     /** the column name for the household_id field */
     const HOUSEHOLD_ID = 'capteur.household_id';
@@ -66,12 +69,12 @@ abstract class BaseCapteurPeer
      * e.g. CapteurPeer::$fieldNames[CapteurPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'CapteurName', 'HouseholdId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'capteurName', 'householdId', ),
-        BasePeer::TYPE_COLNAME => array (CapteurPeer::ID, CapteurPeer::CAPTEUR_NAME, CapteurPeer::HOUSEHOLD_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CAPTEUR_NAME', 'HOUSEHOLD_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'capteur_name', 'household_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'CapteurName', 'Version', 'HouseholdId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'capteurName', 'version', 'householdId', ),
+        BasePeer::TYPE_COLNAME => array (CapteurPeer::ID, CapteurPeer::CAPTEUR_NAME, CapteurPeer::VERSION, CapteurPeer::HOUSEHOLD_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CAPTEUR_NAME', 'VERSION', 'HOUSEHOLD_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'capteur_name', 'version', 'household_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -81,12 +84,12 @@ abstract class BaseCapteurPeer
      * e.g. CapteurPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'CapteurName' => 1, 'HouseholdId' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'capteurName' => 1, 'householdId' => 2, ),
-        BasePeer::TYPE_COLNAME => array (CapteurPeer::ID => 0, CapteurPeer::CAPTEUR_NAME => 1, CapteurPeer::HOUSEHOLD_ID => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CAPTEUR_NAME' => 1, 'HOUSEHOLD_ID' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'capteur_name' => 1, 'household_id' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'CapteurName' => 1, 'Version' => 2, 'HouseholdId' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'capteurName' => 1, 'version' => 2, 'householdId' => 3, ),
+        BasePeer::TYPE_COLNAME => array (CapteurPeer::ID => 0, CapteurPeer::CAPTEUR_NAME => 1, CapteurPeer::VERSION => 2, CapteurPeer::HOUSEHOLD_ID => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CAPTEUR_NAME' => 1, 'VERSION' => 2, 'HOUSEHOLD_ID' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'capteur_name' => 1, 'version' => 2, 'household_id' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -162,10 +165,12 @@ abstract class BaseCapteurPeer
         if (null === $alias) {
             $criteria->addSelectColumn(CapteurPeer::ID);
             $criteria->addSelectColumn(CapteurPeer::CAPTEUR_NAME);
+            $criteria->addSelectColumn(CapteurPeer::VERSION);
             $criteria->addSelectColumn(CapteurPeer::HOUSEHOLD_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.capteur_name');
+            $criteria->addSelectColumn($alias . '.version');
             $criteria->addSelectColumn($alias . '.household_id');
         }
     }

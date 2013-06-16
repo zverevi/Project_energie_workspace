@@ -21,10 +21,12 @@ use m2miageGre\energyProjectBundle\Model\Mesure;
 /**
  * @method CapteurQuery orderById($order = Criteria::ASC) Order by the id column
  * @method CapteurQuery orderByCapteurName($order = Criteria::ASC) Order by the capteur_name column
+ * @method CapteurQuery orderByVersion($order = Criteria::ASC) Order by the version column
  * @method CapteurQuery orderByHouseholdId($order = Criteria::ASC) Order by the household_id column
  *
  * @method CapteurQuery groupById() Group by the id column
  * @method CapteurQuery groupByCapteurName() Group by the capteur_name column
+ * @method CapteurQuery groupByVersion() Group by the version column
  * @method CapteurQuery groupByHouseholdId() Group by the household_id column
  *
  * @method CapteurQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -43,10 +45,12 @@ use m2miageGre\energyProjectBundle\Model\Mesure;
  * @method Capteur findOneOrCreate(PropelPDO $con = null) Return the first Capteur matching the query, or a new Capteur object populated from the query conditions when no match is found
  *
  * @method Capteur findOneByCapteurName(string $capteur_name) Return the first Capteur filtered by the capteur_name column
+ * @method Capteur findOneByVersion(string $version) Return the first Capteur filtered by the version column
  * @method Capteur findOneByHouseholdId(int $household_id) Return the first Capteur filtered by the household_id column
  *
  * @method array findById(int $id) Return Capteur objects filtered by the id column
  * @method array findByCapteurName(string $capteur_name) Return Capteur objects filtered by the capteur_name column
+ * @method array findByVersion(string $version) Return Capteur objects filtered by the version column
  * @method array findByHouseholdId(int $household_id) Return Capteur objects filtered by the household_id column
  */
 abstract class BaseCapteurQuery extends ModelCriteria
@@ -149,7 +153,7 @@ abstract class BaseCapteurQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `capteur_name`, `household_id` FROM `capteur` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `capteur_name`, `version`, `household_id` FROM `capteur` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -307,6 +311,35 @@ abstract class BaseCapteurQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CapteurPeer::CAPTEUR_NAME, $capteurName, $comparison);
+    }
+
+    /**
+     * Filter the query on the version column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVersion('fooValue');   // WHERE version = 'fooValue'
+     * $query->filterByVersion('%fooValue%'); // WHERE version LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $version The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CapteurQuery The current query, for fluid interface
+     */
+    public function filterByVersion($version = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($version)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $version)) {
+                $version = str_replace('*', '%', $version);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CapteurPeer::VERSION, $version, $comparison);
     }
 
     /**
