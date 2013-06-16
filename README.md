@@ -36,7 +36,7 @@ Install `php5-mysql`
     $ sudo apt-get install php5-mysql
 ```
 
-Create a mysql user `irise` with password `irise`
+Create a mysql user `irise` with password `irise` and grand privilege.
 
 Create database and tables using propel command
 ```bash
@@ -75,6 +75,7 @@ Create or update tables:
 ```
 
 Default port is *11000*
+
 **API**
 
 path: `/{version}/{year}/{v4Threshold}/{household}.json`
