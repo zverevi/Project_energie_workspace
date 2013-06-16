@@ -29,3 +29,13 @@ Create database and tables using propel command
 Database schema is in `m2miageGre\energyProjectBundle\Resources/config`
 
 Propel doc: http://symfony.com/fr/doc/current/book/propel.html
+
+**Populate**
+
+Irise's files are in: `app/Resources/irise/1000080-2000900-3009906.txt`
+
+Create or update tables:
+
+```bash
+$ php app/console irise:createTable app/Resources/irise/1000080-2000900-3009906.txt
+```
