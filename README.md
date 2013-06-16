@@ -1,7 +1,4 @@
-CONFIGURATION
-============
+Symfony 2 conf
+------
 
-`
-$ sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs
-$ sudo setfacl -dR -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
-`
+https://gist.github.com/luap/ef59ac49622ea171d430#file-config-symfon2
