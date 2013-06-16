@@ -1,6 +1,22 @@
 Energy Project M2Miage Grenoble
 ------
 
+**Dependencies with Composer**
+
+Install Composer
+
+```bash
+$ curl -sS https://getcomposer.org/installer | php
+$ mv composer.phar /usr/local/bin/composer
+```
+
+Install vendors
+
+```bash
+$ composer install
+```
+
+
 **Setting up Permissions**
 
 One common issue is that the app/cache and app/logs directories must be writable both by the web server and the command line user. On a UNIX system, if your web server user is different from your command line user, you can run the following commands just once in your project to ensure that permissions will be setup properly.
@@ -10,6 +26,8 @@ Note that not all web servers run as the user www-data as in the examples below.
     sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs
     sudo setfacl -dR -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
 ```
+
+source
 
 **Mysql**
 
@@ -29,3 +47,19 @@ Create database and tables using propel command
 Database schema is in `m2miageGre\energyProjectBundle\Resources/config`
 
 Propel doc: http://symfony.com/fr/doc/current/book/propel.html
+
+**Populate**
+
+Irise's files are in: `app/Resources/irise/`
+
+Create or update tables:
+
+```bash
+$ php app/console irise:createTable app/Resources/irise/1000080-2000900-3009906.txt
+```
+
+**Usefull links and ressources**
+
+- [Éviter les fuites mémoire avec Propel](http://www.pmsipilot.org/2012/01/13/eviter-les-fuites-memoire-avec-propel/)
+- [Garbage Collector et consommation mémoire](http://blog.pascal-martin.fr/post/php-5.3-garbage-collector-vs-consommation-memoire)
+- [Databases and Propel](http://symfony.com/doc/current/book/propel.html)
