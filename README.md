@@ -1,5 +1,5 @@
 Energy Project M2Miage Grenoble
-------
+====
 
 **Dependencies with Composer**
 
@@ -77,12 +77,14 @@ Create or update tables:
 Default port is *11000*
 **API**
 
-path: `/{version}/{houseId}/{year}_{month}_{day}.json`
+___
 
-Example:
-    `http://127.0.0.1:11000/v3/2000903/1998_02_07.json`
-    
-Return:
+How to use the API
+----
+
+**Path:** `/{version}/{houseId}/{year}_{month}_{day}.json`
+
+**Example:** `GET http://127.0.0.1:11000/v3/2000903/1998_02_07.json`
 
 ```json
 {
