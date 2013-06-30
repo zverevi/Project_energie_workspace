@@ -5,3 +5,11 @@ m2miage_greenergy_project_api:
             _format: json
     requirements:
            _method: GET
+
+m2miage_greenergy_project_api_v2:
+    pattern: /{version}/{household}/{year}_{month}_{day}.json
+    defaults:
+            _controller: m2miagegre.api.controller:apiActionV2
+            _format: json
+    requirements:
+           _method: GET

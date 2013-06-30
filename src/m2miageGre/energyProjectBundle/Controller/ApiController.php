@@ -23,10 +23,32 @@ class ApiController extends Controller
 
         $capteur = CapteurQuery::create()
             ->filterByHouseholdId($household)
-//            ->filterByVersion($version)
+            ->filterByVersion($version)
             ->find();
 
         $searchDate = "1998-01-24";
+        $mesures = MesureQuery::create()
+            ->filterByCapteur($capteur)
+            ->filterByTimestamp(array("min" => $searchDate." 00:00:00", "max" => $searchDate." 23:59:59"))
+            ->find();
+
+
+        return new Response($mesures->toJSON(false, true));
+    }
+
+    public function apiActionV2(HttpRequest $request)
+    {
+        $version = $request->get("version");
+        $household = $request->get("household");
+        $year = $request->get("year");
+        $month = $request->get("month");
+        $day = $request->get("day");
+
+        $capteur = CapteurQuery::create()
+            ->filterByHouseholdId($household)
+            ->filterByVersion($version)
+            ->find();
+        $searchDate = "$year-$month-$day";
         $mesures = MesureQuery::create()
             ->filterByCapteur($capteur)
             ->filterByTimestamp(array("min" => $searchDate." 00:00:00", "max" => $searchDate." 23:59:59"))
