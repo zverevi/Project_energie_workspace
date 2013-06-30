@@ -3,6 +3,10 @@
 namespace m2miageGre\energyProjectBundle\Model\serializeModel;
 
 use JMS\Serializer\Annotation as Ser;
+use m2miageGre\energyProjectBundle\Model\Capteur as propelCapteur;
+use m2miageGre\energyProjectBundle\Model\Mesure as propelMesure;
+use m2miageGre\energyProjectBundle\Model\serializeModel\Capteur;
+use m2miageGre\energyProjectBundle\Model\serializeModel\Mesure;
 
 /**
  * @Ser\AccessType("public_method")
@@ -11,47 +15,102 @@ use JMS\Serializer\Annotation as Ser;
 class Household {
 
     /**
-     * @var integer
-     * @Ser\Type("Integer")
+     * @var string
+     * @Ser\Type("string")
      * @Ser\SerializedName("id")
      */
     protected $id;
 
     /**
-     * @var array<\m2miageGre\energyProjectBundle\Model\serializeModel\Day>
-     * @Ser\Type("array<m2miageGre\energyProjectBundle\Model\serializeModel\Day>")
-     * @Ser\SerializedName("days")
+     * @var \DateTime
+     * @Ser\Type("DateTime<'Y-m-d', 'Europe/Paris'>")
+     * @Ser\SerializedName("date")
      */
-    protected $days;
+    protected $date;
 
     /**
-     * @param $day Day
+     * @var array<\m2miageGre\energyProjectBundle\Model\serializeModel\Capteur>
+     * @Ser\Type("array<m2miageGre\energyProjectBundle\Model\serializeModel\Capteur>")
+     * @Ser\SerializedName("capteurs")
      */
-    public function addDay($day)
+    protected $capteurs;
+
+    /**
+     * @param $capteur Capteur
+     */
+    public function addCapteur($capteur)
     {
-        $this->days[] = $day;
+        $this->capteurs[] = $capteur;
     }
 
-    function __construct($days, $id)
+    /**
+     * @param $mesure propelMesure
+     */
+    public function addMesure($mesure)
     {
-        $this->days = $days;
+        $capteur = $this->getCapteur($mesure->getCapteurId());
+        $capteur->addMesure(new Mesure(
+            $mesure->getEnergy(),
+            $mesure->getState(),
+            $mesure->getTimestamp()
+        ));
+    }
+
+    /**
+     * @param $id
+     * @return Capteur
+     */
+    public function getCapteur($id)
+    {
+        $targetCapteur = null;
+        /** @var $capteur propelCapteur */
+        foreach($this->capteurs as $capteur) {
+            if ($id == $capteur->getId()) {
+                $targetCapteur = $capteur;
+                break;
+            }
+        }
+
+        return $targetCapteur;
+    }
+
+    function __construct($date, $id, $capteurs = [])
+    {
+        $this->capteurs = $capteurs;
+        $this->date = $date;
         $this->id = $id;
     }
 
     /**
-     * @param array $days
+     * @param array $capteurs
      */
-    public function setDays($days)
+    public function setCapteurs($capteurs)
     {
-        $this->days = $days;
+        $this->capteurs = $capteurs;
     }
 
     /**
      * @return array
      */
-    public function getDays()
+    public function getCapteurs()
     {
-        return $this->days;
+        return $this->capteurs;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 
     /**
@@ -69,7 +128,4 @@ class Household {
     {
         return $this->id;
     }
-
-
-
 }

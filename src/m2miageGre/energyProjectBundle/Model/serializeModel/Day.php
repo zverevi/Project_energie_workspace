@@ -17,19 +17,7 @@ use JMS\Serializer\Annotation as Ser;
  */
 class Day {
 
-    /**
-     * @var \DateTime
-     * @Ser\Type("DateTime<'Y-m-d', 'Europe/Paris'>")
-     * @Ser\SerializedName("date")
-     */
-    protected $date;
 
-    /**
-     * @var array<\m2miageGre\energyProjectBundle\Model\serializeModel\Capteur>
-     * @Ser\Type("array<m2miageGre\energyProjectBundle\Model\serializeModel\Capteur>")
-     * @Ser\SerializedName("capteurs")
-     */
-    protected $capteurs;
 
     /**
      * @param $capteur Capteur
@@ -39,7 +27,7 @@ class Day {
         $this->capteurs[] = $capteur;
     }
 
-    function __construct($capteurs, $date)
+    function __construct($date, $capteurs = [])
     {
         $this->capteurs = $capteurs;
         $this->date = $date;
