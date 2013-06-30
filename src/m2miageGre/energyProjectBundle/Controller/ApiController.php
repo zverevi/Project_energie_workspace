@@ -32,7 +32,6 @@ class ApiController extends Controller
             ->filterByTimestamp(array("min" => $searchDate." 00:00:00", "max" => $searchDate." 23:59:59"))
             ->find();
 
-
         return new Response($mesures->toJSON(false, true));
     }
 
