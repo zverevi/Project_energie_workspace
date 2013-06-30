@@ -77,10 +77,224 @@ Create or update tables:
 Default port is *11000*
 **API**
 
-path: `/{version}/{year}/{v4Threshold}/{household}.json`
+path: `/{version}/{houseId}/{year}_{month}_{day}.json`
 
 Example:
-    `http://127.0.0.1:11000/app_dev.php/v4/1999/0/2000903.json`
+    `http://127.0.0.1:11000/v3/2000903/1998_02_07.json`
+    
+Return:
+
+```json
+{
+    "id": "2000903",
+    "date": "1998-02-07",
+    "capteurs": [
+        {
+            "name": "Halogen lamp 1 ()",
+            "mesures": [
+                {
+                    "state": 0,
+                    "energy": 66,
+                    "timestamp": "1998-02-07 18:30:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 75,
+                    "timestamp": "1998-02-07 18:40:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 69,
+                    "timestamp": "1998-02-07 19:40:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 50,
+                    "timestamp": "1998-02-07 19:50:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 51,
+                    "timestamp": "1998-02-07 20:10:00"
+                }
+            ],
+            "id": 2,
+            "version": "v3",
+            "prevMesure": {
+                "state": 0,
+                "energy": 0,
+                "timestamp": "1998-02-06 23:30:00"
+            }
+        },
+        {
+            "name": "Halogen lamp 4 ()",
+            "mesures": [
+                {
+                    "state": 0,
+                    "energy": 66,
+                    "timestamp": "1998-02-07 17:40:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 75,
+                    "timestamp": "1998-02-07 17:50:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 73,
+                    "timestamp": "1998-02-07 18:00:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 74,
+                    "timestamp": "1998-02-07 18:10:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 75,
+                    "timestamp": "1998-02-07 18:20:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 73,
+                    "timestamp": "1998-02-07 18:30:00"
+                }
+            ],
+            "id": 6,
+            "version": "v3",
+            "prevMesure": {
+                "state": 0,
+                "energy": 0,
+                "timestamp": "1998-02-02 23:00:00"
+            }
+        },
+        {
+            "name": "Chest freezer (273l)",
+            "mesures": [
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 00:00:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 7,
+                    "timestamp": "1998-02-07 00:20:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 8,
+                    "timestamp": "1998-02-07 00:30:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 00:40:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 15,
+                    "timestamp": "1998-02-07 01:00:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 01:10:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 9,
+                    "timestamp": "1998-02-07 01:30:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 5,
+                    "timestamp": "1998-02-07 01:40:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 01:50:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 15,
+                    "timestamp": "1998-02-07 02:10:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 02:20:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 10,
+                    "timestamp": "1998-02-07 02:40:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 5,
+                    "timestamp": "1998-02-07 02:50:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 03:00:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 14,
+                    "timestamp": "1998-02-07 03:20:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 03:30:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 9,
+                    "timestamp": "1998-02-07 03:50:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 6,
+                    "timestamp": "1998-02-07 04:00:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 04:10:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 15,
+                    "timestamp": "1998-02-07 04:30:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 0,
+                    "timestamp": "1998-02-07 04:40:00"
+                },
+                {
+                    "state": 0,
+                    "energy": 5,
+                    "timestamp": "1998-02-07 05:00:00"
+                }
+            ],
+            "id": 9,
+            "version": "v3",
+            "prevMesure": {
+                "state": 0,
+                "energy": 15,
+                "timestamp": "1998-02-06 23:50:00"
+            }
+        }
+    ]
+
+}
+```
+    
 
 **Usefull links and ressources**
 
