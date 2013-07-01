@@ -18,8 +18,8 @@ class Capteur {
     protected $name;
 
     /**
-     * @var array<\m2miageGre\energyProjectBundle\Model\serializeModel\Mesure>
-     * @Ser\Type("array<m2miageGre\energyProjectBundle\Model\serializeModel\Mesure>")
+     * @var array<integer>
+     * @Ser\Type("array<integer>")
      * @Ser\SerializedName("mesures")
      */
     protected $mesures;
@@ -50,7 +50,9 @@ class Capteur {
      */
     public function addMesure($mesure)
     {
-        $this->mesures[] = $mesure;
+//        var_dump($this->prevMesure);exit;
+        $this->mesures[] = $mesure->getEnergy();
+        $this->prevMesure = $mesure;
     }
 
     function __construct($name, $id, $version, $prevMesure = null, $mesures= [])
