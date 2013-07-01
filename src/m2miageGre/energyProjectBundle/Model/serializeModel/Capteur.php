@@ -50,9 +50,54 @@ class Capteur {
      */
     public function addMesure($mesure)
     {
-//        var_dump($this->prevMesure);exit;
-        $this->mesures[] = $mesure->getEnergy();
-        $this->prevMesure = $mesure;
+        $midnight = date_create_from_format("Y-m-d H:i:s", $mesure->getTimestamp()->format("Y-m-d")." 00:00:00");
+        $interval = $midnight->diff($mesure->getTimestamp());
+        $index = (intval(($interval->format("%i"))) + (60 * intval($interval->format("%H"))))/10;
+        $this->mesures[$index] = $mesure->getEnergy();
+    }
+
+    public function fillGap()
+    {
+        if ($this->version == "v2") {
+            $this->fillGapV2();
+        }
+        if ($this->version == "v3" || $this->version == "v4") {
+            $this->fillGapV34();
+        }
+    }
+
+    public function fillGapV2()
+    {
+        $mesures = $this->mesures;
+        for ($i = 0; $i < 144; $i++) {
+            if ( !isset($mesures[$i])) {
+                $mesures[$i] = 0;
+            }
+        }
+        $finalMesures = [];
+        for ($j=0; $j < 144; $j++) {
+            $finalMesures[] = $mesures[$j];
+        }
+        $this->mesures = $finalMesures;
+    }
+
+    public function fillGapV34()
+    {
+        $mesures = $this->mesures;
+        $prevEnergy = $this->prevMesure->getEnergy();
+        for ($i = 0; $i < 144; $i++) {
+            if ( !isset($mesures[$i])) {
+                $mesures[$i] = $prevEnergy;
+            } else {
+                $prevEnergy = $mesures[$i];
+            }
+        }
+        $finalMesures = [];
+        for ($j=0; $j < 144; $j++) {
+            $finalMesures[] = $mesures[$j];
+        }
+        $this->mesures = $finalMesures;
+
     }
 
     function __construct($name, $id, $version, $prevMesure = null, $mesures= [])

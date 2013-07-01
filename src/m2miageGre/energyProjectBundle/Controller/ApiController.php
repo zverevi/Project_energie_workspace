@@ -90,6 +90,7 @@ class ApiController extends Controller
         foreach ($mesures as $propMesure) {
             $household->addMesure($propMesure);
         }
+        $household->fillGap();
 
         return new Response($this->serializer->serialize($household, "json"));
     }

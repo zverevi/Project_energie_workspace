@@ -56,6 +56,13 @@ class Household {
         ));
     }
 
+    public function fillGap()
+    {
+        foreach ($this->capteurs as $capteur) {
+            $capteur->fillGap();
+        }
+    }
+
     /**
      * @param $id
      * @return Capteur
